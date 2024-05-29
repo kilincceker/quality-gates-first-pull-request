@@ -1,15 +1,33 @@
-name: Annotate PR                   # This is the name of the workflow. It describes what the action does.
+name: CI
 
-jobs:                               # This section defines the jobs that the workflow will execute.
-  annotate:                         # This is the identifier for this specific job. It's a custom name and can be anything.
-    runs-on: ubuntu-latest          # Specifies the type of virtual host environment (runner) on which the job will run.
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
 
-    steps:                          # A list of steps that this job will execute.
-      - uses: actions/checkout@v2   # This step uses the checkout action to clone your repository code into the runner.
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
 
-      - name: Annotate Pull Request # Describes what this specific step does.
-        uses: tau-github-actions-for-testing/tau-own-action-pull-request@main
-        with:                       # This section includes inputs that the action needs to operate.
-          # Add action-specific parameters here, such as:
-          # token: ${{ secrets.GITHUB_TOKEN }}
-          # another-parameter: value
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16' # Specify your Node.js version here.
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run tests
+        run: npm test
+
+      - name: Annotate Pull Request
+        uses: kilincceker/quality-gates-first-pull-request@main
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
