@@ -1,0 +1,20 @@
+name: Process Pull Request
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  label-and-comment-pr:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Label and Comment on PR
+        uses: kilincceker/quality-gates-first-pull-request@main
+        with:
+          owner: ${{ github.repository_owner }}
+          repo: ${{ github.event.repository.name }}
+          pr_number: ${{ github.event.number }}
+          token: ${{ secrets.PAT_TOKEN }}
