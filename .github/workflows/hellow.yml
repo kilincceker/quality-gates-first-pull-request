@@ -1,0 +1,7 @@
+name: Annotate PR
+    uses: tau-github-actions-for-testing/tau-own-action-pull-request@main
+    with:
+      owner: ${{ github.repository_owner }}
+      repo: ${{ github.event.repository.name }}
+      pr_number: ${{ github.event.number }}
+      token: ${{ secrets.PAT_TOKEN }}
